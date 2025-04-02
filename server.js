@@ -17,6 +17,8 @@ const app = express();
 const helpers = require("./helpers");
 const expressLayouts = require("express-ejs-layouts");
 
+const PORT = process.env.PORT || 8080;
+
 // Set EJS as the view engine
 app.set("layout", "layouts/main");
 app.set("views", path.join(__dirname, "views"));
@@ -64,7 +66,7 @@ app.get("/htmlDemo", (req, res) => {
 });
 
 // Route for Add Student
-app.get("/addStudents", (req, res) => {
+app.get("/students/add", (req, res) => {
   collegeData
     .getCourses()
     .then((courses) => {
@@ -77,16 +79,19 @@ app.get("/addStudents", (req, res) => {
 
 
 // POST /students/add
-app.post("/addStudents", (req, res) => {
+app.post("/students/add", (req, res) => {
   collegeData
     .addStudent(req.body)
-    .then(() => {
-      res.redirect("/students"); // Or res.render("student-added", { navLink: navLink });
-    })
-    .catch((err) => {
-      res.status(500).render("error", { message: "Error adding student: " + err, navLink: navLink });
-    });
+    .then(() => res.redirect("/students"))
+    .catch((err) =>
+      res.status(500).render("error", {
+        message: "Error adding student: " + err,
+        navLink: navLink,
+      })
+    );
 });
+
+
 
 // Get all students or by course
 app.get("/students", (req, res) => {
@@ -145,13 +150,13 @@ app.get("/courses", (req, res) => {
 
 // initialize
 
-collegeData.initialize()
-  .then(() => {
-    console.log("Database sync successful ✅");
-  })
-  .catch((err) => {
-    console.log("Database sync failed ❌:", err);
-  });
+// collegeData.initialize()
+//   .then(() => {
+//     console.log("Database sync successful ✅");
+//   })
+//   .catch((err) => {
+//     console.log("Database sync failed ❌:", err);
+//   });
 
 
 // Get a student by student number
@@ -308,16 +313,27 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
 });
 
+// (async () => {
+//   try {
+//     await collegeData.initialize().then(() => {
+//       app.listen(process.env.PORT, () => {
+//         console.log(`Server listening on port ${process.env.PORT}`);
+//       });
+//     });
+//     console.log("Data initialized successfully");
+//   } catch (err) {
+//     console.error("Failed to initialize data: ", err);
+//   }
+// })();
+
 (async () => {
   try {
-    await collegeData.initialize().then(() => {
-      app.listen(process.env.PORT, () => {
-        console.log(`Server listening on port ${process.env.PORT}`);
-      });
+    await collegeData.initialize();
+    app.listen(PORT, () => {
+      console.log(`✅ Server is running locally on http://localhost:${PORT}`);
     });
-    console.log("Data initialized successfully");
   } catch (err) {
-    console.error("Failed to initialize data: ", err);
+    console.error("❌ Failed to initialize data: ", err);
   }
 })();
 

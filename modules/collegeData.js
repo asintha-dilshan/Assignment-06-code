@@ -33,7 +33,8 @@ const Student = sequelize.define('Student', {
     addressCity: Sequelize.STRING,
     addressProvince: Sequelize.STRING,
     TA: Sequelize.BOOLEAN,
-    status: Sequelize.STRING
+    status: Sequelize.STRING,
+    course: Sequelize.INTEGER
 });
 
 // Define the Course model
@@ -50,134 +51,70 @@ const Course = sequelize.define('Course', {
 // Define the hasMany relationship between Course and Student
 Course.hasMany(Student, { foreignKey: 'course' });
 
-/** IMPLEMENTED ✅ */
 module.exports.initialize = function () {
-    return new Promise((resolve, reject) => {
-        sequelize.sync()
-            .then(() => {
-                resolve();
-            })
-            .catch((err) => {
-                reject("unable to sync the database");
-            });
-    });
+    return sequelize.sync();
 };
 
-/** PLACEHOLDER FUNCTIONS — to be implemented next */
 module.exports.getAllStudents = function () {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    return Student.findAll();
 };
 
 module.exports.getTAs = function () {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    return Student.findAll({ where: { TA: true } });
 };
 
 module.exports.getCourses = function () {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    return Course.findAll();
 };
 
 module.exports.getStudentByNum = function (num) {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    return Student.findOne({ where: { studentNum: num } });
 };
 
 module.exports.getStudentsByCourse = function (course) {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    return Student.findAll({ where: { course: course } });
 };
 
 module.exports.addStudent = function (studentData) {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    studentData.TA = studentData.TA ? true : false;
+    for (let prop in studentData) {
+        if (studentData[prop] === "") studentData[prop] = null;
+    }
+    return Student.create(studentData);
 };
 
 module.exports.getCourseById = function (id) {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    return Course.findOne({ where: { courseId: id } });
 };
 
 module.exports.updateStudent = function (studentData) {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
+    studentData.TA = studentData.TA ? true : false;
+    for (let prop in studentData) {
+        if (studentData[prop] === "") studentData[prop] = null;
+    }
+    return Student.update(studentData, { where: { studentNum: studentData.studentNum } });
 };
 
-
 module.exports.addCourse = function (courseData) {
-    return new Promise((resolve, reject) => {
-        for (let prop in courseData) {
-            if (courseData[prop] === "") {
-                courseData[prop] = null;
-            }
-        }
-
-        Course.create(courseData)
-            .then(() => {
-                resolve();
-            })
-            .catch((err) => {
-                reject("unable to create course");
-            });
-    });
+    for (let prop in courseData) {
+        if (courseData[prop] === "") courseData[prop] = null;
+    }
+    return Course.create(courseData);
 };
 
 module.exports.updateCourse = function (courseData) {
-    return new Promise((resolve, reject) => {
-        for (let prop in courseData) {
-            if (courseData[prop] === "") {
-                courseData[prop] = null;
-            }
-        }
-
-        Course.update(courseData, {
-            where: { courseId: courseData.courseId }
-        })
-            .then(() => {
-                resolve();
-            })
-            .catch((err) => {
-                reject("unable to update course");
-            });
+    for (let prop in courseData) {
+        if (courseData[prop] === "") courseData[prop] = null;
+    }
+    return Course.update(courseData, {
+        where: { courseId: courseData.courseId }
     });
 };
 
 module.exports.deleteCourseById = function (id) {
-    return new Promise((resolve, reject) => {
-        Course.destroy({
-            where: { courseId: id }
-        })
-            .then((rowsDeleted) => {
-                if (rowsDeleted > 0) {
-                    resolve();
-                } else {
-                    reject("Course not found");
-                }
-            })
-            .catch((err) => {
-                reject("unable to delete course");
-            });
-    });
+    return Course.destroy({ where: { courseId: id } });
 };
 
 module.exports.deleteStudentByNum = function (studentNum) {
-    return Student.destroy({ where: { studentNum: studentNum } })
-      .then((rowsDeleted) => {
-        if (rowsDeleted > 0) {
-          return Promise.resolve();
-        } else {
-          return Promise.reject("Student not found");
-        }
-      })
-      .catch(() => Promise.reject("Unable to delete student"));
-  };
-  
+    return Student.destroy({ where: { studentNum: studentNum } });
+};
