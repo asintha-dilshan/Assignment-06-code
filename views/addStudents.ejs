@@ -1,0 +1,42 @@
+<div class="row">
+	<main class="col-md-12">
+	  <br />
+	  <h2>Add a New Student</h2>
+	  <hr />
+  
+	  <form method="post" action="/addStudents">
+		<fieldset>
+		  <legend>Personal Information</legend>
+		  <div class="row">
+			<!-- Other form fields stay unchanged... -->
+  
+			<div class="col-md-6">
+			  <div class="form-group">
+				<label>Enrolled in Course:</label>
+				<% if (courses.length > 0) { %>
+				  <select class="form-control" name="course" id="course">
+					<option value="">Select Course</option>
+					<% courses.forEach(function(course) { %>
+					  <option value="<%= course.courseId %>"><%= course.courseCode %></option>
+					<% }); %>
+				  </select>
+				<% } else { %>
+				  <div>No Courses</div>
+				<% } %>
+			  </div>
+			</div>
+		  </div>
+		</fieldset>
+  
+		<hr />
+  
+		<input
+		  type="submit"
+		  class="btn btn-primary float-right"
+		  value="Add Student"
+		/>
+		<br /><br /><br />
+	  </form>
+	</main>
+  </div>
+  

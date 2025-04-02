@@ -1,0 +1,52 @@
+<h2 class="mb-4">
+  Students
+  <a href="/students/add" class="btn btn-success float-right">Add New Student</a>
+</h2>
+
+<% if (typeof students !== 'undefined' && students.length > 0) { %>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Student Num</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Status</th>
+        <th>Course ID</th>
+        <th></th> <!-- Column for remove button -->
+      </tr>
+    </thead>
+    <tbody>
+      <% students.forEach(function(student) { %>
+      <tr>
+        <td><%= student.studentNum %></td>
+        <td>
+          <a href="/student/<%= student.studentNum %>">
+            <%= student.firstName %> <%= student.lastName %>
+          </a>
+        </td>
+        <td><a href="mailto:<%= student.email %>"><%= student.email %></a></td>
+        <td>
+          <%= student.addressStreet %>, <%= student.addressCity %>, <%= student.addressProvince %>
+        </td>
+        <td><%= student.status %></td>
+        <td>
+          <a href="/students?course=<%= student.course %>"><%= student.course %></a>
+        </td>
+        <td>
+          <a href="/student/delete/<%= student.studentNum %>" class="btn btn-danger btn-sm"
+             onclick="return confirm('Are you sure you want to delete this student?');">
+            Remove
+          </a>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+<% } else if (typeof message !== 'undefined') { %>
+<div class="col-md-12 text-center">
+  <strong><%= message %></strong>
+</div>
+<% } %>
