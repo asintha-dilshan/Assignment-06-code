@@ -1,5 +1,5 @@
 /*********************************************************************************
- *  WEB700 – Assignment 05
+ *  WEB700 – Assignment 06
  *  I declare that this assignment is my own work in accordance with Seneca Academic Policy.
  *  No part of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
@@ -7,7 +7,7 @@
  *  Name: Asintha Dilshan Jayasekara Wisurumana Arachchige
  *  Student ID: 170388235
  *  Date: 03/25/2025
- *  Online (Vercel) Link: https://assignment-05-code.vercel.app/
+ *  Online (Vercel) Link: https://assignment-06-code.vercel.app/
  ********************************************************************************/
 
 const express = require("express");
